@@ -1,6 +1,4 @@
 require("dotenv").config();
-const fs = require("fs");
-const https = require("https");
 const express = require("express");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
@@ -10,10 +8,6 @@ const rateLimit = require("express-rate-limit");
 
 const app = express();
 const port = process.env.PORT || 5000;
-
-// Trust proxy for rate limiting to work properly
-app.set("trust proxy", 1);
-
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -25,12 +19,6 @@ const limiter = rateLimit({
     message: "Too many requests, please try again later."
 });
 app.use(limiter);
-
-// Load SSL Certificate and Key
-const options = {
-    key: fs.readFileSync("server.key"),
-    cert: fs.readFileSync("server.crt")
-};
 
 // Database Connection
 let db;
@@ -172,4 +160,3 @@ app.get("/", (req, res) => {
 app.listen(5000, '0.0.0.0', () => {
     console.log("Server running on https://0.0.0.0:5000");
 });
-
